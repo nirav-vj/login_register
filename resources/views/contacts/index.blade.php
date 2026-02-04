@@ -13,11 +13,11 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('success'))
+                    <!-- @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
-                    @endif
+                    @endif -->
 
                     <table class="table table-bordered text-center">
                         <tr>
