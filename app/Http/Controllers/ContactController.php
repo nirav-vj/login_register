@@ -105,4 +105,30 @@ class ContactController extends Controller
             ->route('contacts.index')
             ->with('success', 'Contact deleted successfully');
     }
+
+    // for soft delete
+    public function trashed()
+    {
+        $contacts = Contact::onlyTrashed()->where('user_id', auth()->id())->latest()->get();
+        return view('contacts.trashed', compact('contacts'));
+    }
+
+    public function restore($id)
+    {
+        $contact = Contact::onlyTrashed()->where('user_id', auth()->id())->findOrFail($id);
+        $contact->restore();
+        return redirect()->route('contacts.trashed')->with('success', 'Contact restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $contact = Contact::onlyTrashed()->where('user_id', auth()->id())->findOrFail($id);
+        if ($contact->images) {
+            foreach ($contact->images as $image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($image);
+            }
+        }
+        $contact->forceDelete();
+        return redirect()->route('contacts.trashed')->with('success', 'Contact permanently deleted.');
+    }
 }

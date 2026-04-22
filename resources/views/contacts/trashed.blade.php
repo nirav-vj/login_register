@@ -6,19 +6,11 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    Contacts
-                    <a href="{{ route('contacts.trashed') }}" class="btn btn-danger float-right" style="margin-right: 5px;">Soft Delete</a>
-                    <a href="{{ route('categories.index') }}" class="btn btn-success float-right" style="margin-right: 5px;">Category</a>
-                    <a href="{{ route('contacts.create') }}" class="btn btn-primary float-right">Create Contact</a>
+                    Trashed Contacts
+                    <a href="{{ route('contacts.index') }}" class="btn btn-primary float-right">Back to Contacts</a>
                 </div>
 
                 <div class="card-body">
-                    <!-- @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif -->
-
                     <table class="table table-bordered text-center">
                         <tr>
                             <th>No</th>
@@ -32,7 +24,7 @@
                             <th>Skills</th>
                             <th width="200px">Action</th>
                         </tr>
-                        @foreach ($contacts as $contact)
+                        @forelse ($contacts as $contact)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
@@ -48,25 +40,36 @@
                             <td>{{ $contact->phone }}</td>
                             <td>{{ $contact->gender }}</td>
                             <td>
-                                @foreach($contact->interests as $interest)
-                                    <span>{{ $interest }},</span>
-                                @endforeach
+                                @if($contact->interests)
+                                    @foreach($contact->interests as $interest)
+                                        <span>{{ $interest }},</span>
+                                    @endforeach
+                                @endif
                             </td>
                             <td>
-                                @foreach($contact->skills as $skill)
-                                    <span>{{ $skill }},</span>
-                                @endforeach
+                                @if($contact->skills)
+                                    @foreach($contact->skills as $skill)
+                                        <span>{{ $skill }},</span>
+                                    @endforeach
+                                @endif
                             </td>
                             <td>
-                                <form action="{{ route('contacts.destroy',$contact->id) }}" method="POST">
-                                    <a class="btn btn-primary" href="{{ route('contacts.edit',$contact->id) }}">Edit</a>
+                                <form action="{{ route('contacts.restore', $contact->id) }}" method="POST" style="display:inline-block; margin-bottom:5px;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">Restore</button>
+                                </form>
+                                <form action="{{ route('contacts.force-delete', $contact->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger">Permanent Delete</button>
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="10">No soft deleted contacts found.</td>
+                        </tr>
+                        @endforelse
                     </table>
                 </div>
             </div>
