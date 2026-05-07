@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\registerRequest;
+use App\Mail\UserRegisterMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -48,8 +50,11 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
+            'role' => $data['role'],
             'password' => Hash::make($data['password'])
         ]);
+
+        Mail::to($user->email)->send(new UserRegisterMail($user));
 
         Auth::login($user);
         return redirect()->route('contacts.index')->with('success', 'Great! You have Successfully registered');

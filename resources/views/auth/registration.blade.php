@@ -42,6 +42,21 @@
                           </div>
   
                           <div class="form-group row">
+                              <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                              <div class="col-md-6">
+                                  <select id="role" class="form-control" name="role" required>
+                                      <option value="">Select Role</option>
+                                      <option value="developer">Developer</option>
+                                      <option value="project_manager">Project Manager</option>
+                                      <option value="client">Client</option>
+                                  </select>
+                                  @if ($errors->has('role'))
+                                      <span class="text-danger">{{ $errors->first('role') }}</span>
+                                  @endif
+                              </div>
+                          </div>
+  
+                          <div class="form-group row">
                               <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
                               <div class="col-md-6">
                                   <input type="password" id="password" class="form-control" name="password" required>

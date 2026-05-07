@@ -25,6 +25,7 @@ class registerRequest extends FormRequest
             "name" => "required|string",
             "email" => "required|email",
             "phone" => "required|string",
+            "role" => "required|in:developer,project_manager,client",
             "password" => "required|string"
         ];
     }
